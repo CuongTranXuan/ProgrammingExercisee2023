@@ -1,44 +1,65 @@
-class TrieNode:
-    def __init__(self):
-        self.children = {}
-        self.is_end_of_number = False
+from typing import List
 
-class Trie:
+
+class TrieNode:
+    """
+    Attributes:
+        children (Dict[str, TrieNode]): The children nodes of the current node.
+        value (float): the leaf node contain the value of that string, otherwise -1.
+
+    Methods:
+        __init__() -> None: Initializes a new instance of the TrieNode class.
+    """
     def __init__(self, value):
-        self.root = TrieNode()
+        self.children = {}
         self.value = value
 
-    def insert(self, phone_number):
+
+class Trie:
+    """
+    A class representing a trie data structure.
+
+    Attributes:
+        root (TrieNode): The root node of the trie.
+        operator (str): operator that every prefix belongs to.
+
+    Methods:
+        insert(prefix: str, cost: float) -> None: Inserts a phone number into the trie with its cost
+        search(number: str) -> prefix, cost: search the longest prefix that matches the phone number from the trie.
+    """
+    def __init__(self, operator):
+        self.root = TrieNode(-1)
+        self.operator = operator # this trie belongs to which operator
+
+    def insert(self, prefix, cost):
+        """
+        Inserts a phone number into the trie.
+
+        Parameters:
+            phone_number (str): The phone number to be inserted into the trie.
+
+        Returns:
+            None
+        """
         node = self.root
-        for digit in phone_number:
+        for digit in prefix:
             if digit not in node.children:
-                node.children[digit] = TrieNode()
+                node.children[digit] = TrieNode(-1)
             node = node.children[digit]
-        node.is_end_of_number = True
-
-phone_numbers = [{"number":"1234567890","value":10},{"number":"9876543210","value":9},{"number":"5555555555","value":2}, {"number":"1239999999","value":1}]
-
-forest = []
-for phone_number in phone_numbers:
-    trie = Trie(phone_number["value"])
-    trie.insert(phone_number["number"])
-    forest.append(trie)
-
-def find_longest_common_prefix(forest, phone_number):
-    longest_prefix = ""
-    for trie in forest:
-        node = trie.root
+        node.value = cost
+    
+    def search(self, number):
+        """
+        Searches for a longest common prefix between the phone number and the trie.
+        """
+        node = self.root
         prefix = ""
-        for digit in phone_number:
+        for digit in number:
             if digit in node.children:
                 prefix += digit
                 node = node.children[digit]
             else:
                 break
-        if len(prefix) > len(longest_prefix):
-            longest_prefix = prefix
-    return longest_prefix
-
-print(find_longest_common_prefix(forest, "123939393939"))
-
-#create unit test for above code snippet
+        if node.value == -1:
+            return '', -1
+        return prefix, node.value
