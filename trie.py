@@ -54,12 +54,13 @@ class Trie:
         """
         node = self.root
         prefix = ""
+        value = -1
         for digit in number:
             if digit in node.children:
                 prefix += digit
                 node = node.children[digit]
+                if node.value != -1:
+                    value = node.value
             else:
                 break
-        if node.value == -1:
-            return '', -1
-        return prefix, node.value
+        return self.operator, value

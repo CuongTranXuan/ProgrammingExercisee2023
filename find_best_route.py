@@ -1,36 +1,6 @@
 from typing import List
 from trie import Trie
-import json
-
-
-phone_prefixes = {
-  "operatorA": [
-    {
-      "prefix": "0123",
-      "cost": 1.1
-    },
-    {
-      "prefix": "012345",
-      "cost": 2.2
-    }
-  ],
-  "operatorB": [
-    {
-      "prefix": "01",
-      "cost": 3.3
-    },
-    {
-      "prefix": "012345",
-      "cost": 4.4
-    }
-  ],
-  "operatorC": [
-    {
-      "prefix": "6789",
-      "cost": 5.5
-    }
-  ]
-}
+import argparse
 
 def create_forest(prefixes: List) -> List[Trie]:
     """
@@ -63,12 +33,55 @@ def find_all_prefixes(forest: List[Trie], number: str) -> str:
     # Initialize the longest_prefix variable to an empty string
     result = []
     for tree in forest:
-        prefix, cost = tree.search(number)
-        result.append((prefix, cost))
+        operator, cost = tree.search(number)
+        result.append((operator, cost))
 
     # Return the longest common prefix
     return result
 
 if __name__ == '__main__':
+    phone_prefixes = {
+      "operatorA": [
+        {
+          "prefix": "0",
+          "cost": 1.1
+        },
+        {
+          "prefix": "012345",
+          "cost": 2.2
+        },
+        {
+          "prefix": "012",
+          "cost": 2.6
+        },
+        {
+          "prefix": "012345",
+          "cost": 2.2
+        }
+      ],
+      "operatorB": [
+        {
+          "prefix": "01",
+          "cost": 3.3
+        },
+        {
+          "prefix": "012345",
+          "cost": 4.4
+        }
+      ],
+      "operatorC": [
+        {
+          "prefix": "6789",
+          "cost": 5.5
+        }
+      ]
+    }
     test_forest = create_forest(phone_prefixes)
-    print(find_all_prefixes(test_forest, '012399999'))
+    operator_cost = find_all_prefixes(test_forest, "01234999999")
+    min = 9999999999999
+    min_operator = ""
+    for operator, cost in operator_cost:
+        if cost < min and cost != -1:
+            min = cost
+            min_operator = operator
+    print(min_operator, min)
