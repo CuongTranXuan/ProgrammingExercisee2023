@@ -3,23 +3,17 @@ from trie import Trie, TrieNode
 
 class TestTrie(unittest.TestCase):
     def test_insert(self):
-        trie = Trie()
-        trie.insert("apple")
-        self.assertTrue(trie.search("apple"))
-        self.assertFalse(trie.search("banana"))
+        trie = Trie(operator="test")
+        trie.insert("0234", cost=1)
+        self.assertTrue(trie.search("023482934") == ("test", 1))
+        self.assertFalse(trie.search("0123482934") == ("test",1))
 
     def test_search(self):
-        trie = Trie()
-        trie.insert("apple")
-        self.assertTrue(trie.search("apple"))
-        self.assertTrue(trie.search("app"))
-        self.assertFalse(trie.search("banana"))
-
-    def test_starts_with(self):
-        trie = Trie()
-        trie.insert("apple")
-        self.assertTrue(trie.starts_with("app"))
-        self.assertFalse(trie.starts_with("ban"))
+        trie = Trie(operator="test")
+        trie.insert("0234", cost=1)
+        self.assertTrue(trie.search("023482934") == ("test", 1))
+        self.assertTrue(trie.search("0234") == ("test", 1))
+        self.assertFalse(trie.search("0123482934") == ("test", 1))
 
 if __name__ == '__main__':
     unittest.main()
